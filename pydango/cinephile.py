@@ -1,5 +1,4 @@
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import exists
 
 from pydango import state
 from pydango.switchlang import switch
