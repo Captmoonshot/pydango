@@ -4,25 +4,21 @@ from pydango import (
     state
 )
 
-# from pydango.account import Account
+from sqlalchemy.orm import sessionmaker
 
+from pydango import connection
 
+from pydango.accounts import Account
 
-def find_account_by_email():
-    pass
 
 
 def get_action():
     text = '> '
     if state.active_account:
-        text = f'{state.active_account.first_name}{state.active_account.last_name}> '
+        text = f'{state.active_account.first_name} {state.active_account.last_name}> '
     action = input(text)
     return action.strip().lower()
 
-
-
-def create_account():
-    pass
 
 
 

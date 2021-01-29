@@ -27,6 +27,10 @@ def error_msg(text):
     print(text)
 
 
+def exit_app():
+    print()
+    print('bye!')
+    raise KeyboardInterrupt()
 
 
 

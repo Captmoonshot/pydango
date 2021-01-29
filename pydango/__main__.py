@@ -1,4 +1,3 @@
-from importlib import resources
 
 from sqlalchemy.orm import sessionmaker
 
@@ -6,8 +5,8 @@ from sqlalchemy import event
 
 from pydango import (
     connection,
-    # cinephile,
-    # theater_owner
+    cinephile,
+    theater_owner
 )
 from pydango.secondary_func import (
     print_header,
@@ -19,7 +18,6 @@ from pydango.accounts import Account, Base
 
 def main():
     engine = connection.create_connection()
-    Session = sessionmaker(bind=engine)
 
     # Create the Account Table if it doesn't exit
     if not engine.dialect.has_table(engine, "account"):
@@ -31,14 +29,14 @@ def main():
     
     print_header()
 
-    # try:
-    #     while True:
-    #         if find_user_intent() == 'find':
-    #             cinephile.run()
-    #         else:
-    #             theater_owner.run()
-    # except KeyboardInterrupt:
-    #     return
+    try:
+        while True:
+            if find_user_intent() == 'find':
+                cinephile.run()
+            else:
+                theater_owner.run()
+    except KeyboardInterrupt:
+        return
 
 
 

@@ -16,7 +16,7 @@ def run():
         action = primary_func.get_action()
 
         with switch(action) as s:
-            s.case('c', primary_func.create_account)
+            s.case('c', create_account)
             s.case('m', lambda: 'change_mode')
 
             s.default(secondary_func.unknown_command)
@@ -41,3 +41,11 @@ def show_commands():
     print('e[X]it app')
     print('[?] Help (this info)')
     print()
+
+
+def create_account():
+    pass
+
+
+
+
