@@ -30,9 +30,6 @@ def run():
 
 
 
-
-
-
 def show_commands():
     print('What action would you like to take: ')
     print('[C]reate an account')
@@ -44,23 +41,3 @@ def show_commands():
     print('e[X]it app')
     print('[?] Help (this info)')
     print()
-
-def create_account():
-    pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
