@@ -101,5 +101,7 @@ ENV/
 .mypy_cache/
 .idea
 
+config.ini
 
+*.ini
 
