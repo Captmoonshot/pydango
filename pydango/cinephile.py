@@ -86,6 +86,7 @@ def create_account():
     )
     session.add(account)
 
+    # Flush
     my_account = session.query(Account).filter_by(email=email).first()
 
     session.commit()

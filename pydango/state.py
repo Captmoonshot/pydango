@@ -19,6 +19,9 @@ def reload_account():
     if not active_account:
         return
     active_account = session.query(Account).filter_by(email=active_account.email).first()
+    session.close()
+
+    
 
 
 
