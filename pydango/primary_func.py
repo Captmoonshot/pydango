@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 from pydango import connection
 
-from pydango.accounts import Account
+from pydango.tables import Account
 
 
 

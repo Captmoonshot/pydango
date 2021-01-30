@@ -9,7 +9,7 @@ from pydango import (
     secondary_func
 )
 
-from pydango.accounts import Account
+from pydango.tables import Account
 
 
 def run():

@@ -1,8 +1,3 @@
-
-from sqlalchemy.orm import sessionmaker
-
-from sqlalchemy import event
-
 from pydango import (
     connection,
     cinephile,
@@ -13,20 +8,15 @@ from pydango.secondary_func import (
     find_user_intent
 )
 
-from pydango.accounts import Account, Base
-
+from pydango.tables import (
+    Base
+)
 
 def main():
     engine = connection.create_connection()
 
-    # Create the Account Table if it doesn't exit
-    if not engine.dialect.has_table(engine, "account"):
-        Base.metadata.create_all(engine)
-        print(f"Creating Table: account")
-        print(Account.__table__, "created\n")
-    else:
-        print("account table already exists!")
-    
+    Base.metadata.create_all(engine)
+
     print_header()
 
     try:

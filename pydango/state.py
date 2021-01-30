@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy.orm import sessionmaker
 
 from pydango import connection
-from pydango.accounts import Account
+from pydango.tables import Account
 
 from pydango import primary_func
 
@@ -21,7 +21,7 @@ def reload_account():
     active_account = session.query(Account).filter_by(email=active_account.email).first()
     session.close()
 
-    
+
 
 
 
