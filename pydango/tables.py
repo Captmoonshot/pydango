@@ -21,36 +21,6 @@ from sqlalchemy import (
     Table,
     Text,
 )
-from sqlalchemy.orm import sessionmaker
-
-from pydango import connection
-
-def yearsago(years, from_date=None):
-    """Helper function for calculating the date n years ago
-    To be used for receive_before_actor_attach function
-    To calculate age of actor"""
-    if from_date is None:
-        from_date = date.today()
-    return from_date - relativedelta(years=years)
-
-def num_years(begin, end=None):
-    """Helper function for calculating the date n years ago
-    To be used for receive_before_actor_attach function
-    To calculate age of actor"""
-    if end is None:
-        end = date.today()
-    num_years = int((end - begin).days / 365.25)
-    if begin > yearsago(num_years, end):
-        return num_years - 1
-    else:
-        return num_years
-
-def get_session_obj():
-    """Helper function to generation Session obj"""
-    engine = connection.create_connection()
-    Session = sessionmaker(bind=engine)
-    return Session
-
 
 Base = declarative_base()
 
@@ -90,7 +60,7 @@ class Actor(Base):
 
     def __repr__(self):
         return f"<{self.__class__.__name__}(first_name={self.first_name}, last_name={self.last_name})>"
-        
+
 
 class Category(Base):
     __tablename__ = "category"
