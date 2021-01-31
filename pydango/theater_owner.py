@@ -134,6 +134,17 @@ def create_movie():
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = input("Enter the end date: (YYYY-MM-DD) ").strip()
     end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+    
+    # For Many-To-Many relationship between movies and actors
+    main_first_name = input("Enter main actor's first name: ").strip()
+    main_last_name = input("Enter main actor's last name: ").strip()
+    another_actor = input("Do you wish to enter another actor (Yes or No)? ")
+    if another_actor == "Yes" or another_actor == "Y" or another_actor == "yes" or another_actor == "y":
+        supporting_first_name = input("Enter main actor's first name: ").strip()
+        supporting_last_name = input("Enter main actor's last name: ").strip()
+    else:
+        supporting_first_name = None
+        supporting_last_name = None   
 
     def get_active():
         # Emulating an SQL trigger function
@@ -141,6 +152,12 @@ def create_movie():
         if start_date <= today <= end_date:
             return True
         return False
+
+    main_actor = session.query(Actor).filter_by(
+        first_name=main_first_name,
+        last_name=main_last_name
+    ).first()
+        
 
     # Grab the relevant ids for the ForeignKey relationship
     director = session.query(Director).filter_by(
@@ -165,6 +182,7 @@ def create_movie():
         end_date=end_date,
         active=get_active()
     )
+    movie.actors.append(main_actor)
 
     session.add(movie)
 
