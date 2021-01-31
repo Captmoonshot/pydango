@@ -74,6 +74,7 @@ class Account(Base):
     zip_code        = Column(Integer, nullable=False)
     first_name      = Column(String(30), nullable=True)
     last_name       = Column(String(30), nullable=True)
+    theater_owner   = Column(Boolean, nullable=True)
     created         = Column(DateTime, default=datetime.datetime.now)
     updated         = Column(DateTime, onupdate=datetime.datetime.now)
 

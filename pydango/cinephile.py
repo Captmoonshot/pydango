@@ -1,18 +1,16 @@
-from sqlalchemy.orm import sessionmaker
-
 from pydango import state
 from pydango.switchlang import switch
-from pydango import connection
 
 from pydango import (
     primary_func,
     secondary_func
 )
 
+from pydango.primary_func import create_session
 from pydango.tables import Account
 
-from pydango.__main__ import session
 
+engine, session = create_session()
 
 def run():
     print('****************** Hello Cinephile ******************')
@@ -56,10 +54,6 @@ def show_commands():
     print()
 
 def create_account():
-    # engine = connection.create_connection()
-    # Session = sessionmaker(bind=engine)
-    # session = Session()
-
     print("****************** REGISTER ******************")
 
     print()
@@ -86,6 +80,7 @@ def create_account():
         zip_code=zip_code,
         first_name=first_name,
         last_name=last_name
+        # exclude theater_owner attribute
     )
     session.add(account)
 
