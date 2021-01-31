@@ -2,6 +2,7 @@
 
 import datetime
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -23,6 +24,26 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker
 
 from pydango import connection
+
+def yearsago(years, from_date=None):
+    """Helper function for calculating the date n years ago
+    To be used for receive_before_actor_attach function
+    To calculate age of actor"""
+    if from_date is None:
+        from_date = date.today()
+    return from_date - relativedelta(years=years)
+
+def num_years(begin, end=None):
+    """Helper function for calculating the date n years ago
+    To be used for receive_before_actor_attach function
+    To calculate age of actor"""
+    if end is None:
+        end = date.today()
+    num_years = int((end - begin).days / 365.25)
+    if begin > yearsago(num_years, end):
+        return num_years - 1
+    else:
+        return num_years
 
 def get_session_obj():
     """Helper function to generation Session obj"""
@@ -59,6 +80,23 @@ class Account(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(id={self.id}, email={self.email})>"
 
+class Actor(Base):
+    __tablename__ = 'actor'
+
+    id          = Column(Integer, primary_key=True)
+    first_name  = Column(String(50), nullable=True)
+    last_name   = Column(String(50), nullable=True)
+    birth_day   = Column(Date, nullable=True)
+    age         = Column(Integer, nullable=True)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}(first_name={self.first_name}, last_name={self.last_name})>"
+    
+@event.listens_for(Session, 'before_attach')
+def receive_before_actor_attach(session, instance):
+    "listens for the 'before_attach' event"
+    age = num_years(begin=instance.birth_day, end=None)
+    instance.age = age
 
 class Category(Base):
     __tablename__ = "category"
@@ -110,7 +148,7 @@ class Movie(Base):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
 
 @event.listens_for(Session, 'before_attach')
-def receive_before_attach(session, instance):
+def receive_before_movie_attach(session, instance):
     "listens for the 'before_attach' event"
     if instance.start_date <= date.today() <= instance.end_date:
         active = True
@@ -119,17 +157,6 @@ def receive_before_attach(session, instance):
 # Set the ForeignKey and relationship before creating "movie" Table
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 Director.movies = relationship("Movie", order_by=Movie.id, back_populates="director")
-
-
-
-
-# class Actor(Base):
-#     __tablename__ = 'actor'
-
-
-
-
-
 
 
 class Payment(Base):

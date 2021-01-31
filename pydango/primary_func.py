@@ -4,12 +4,11 @@ from pydango import (
     state
 )
 
-from sqlalchemy.orm import sessionmaker
-
-from pydango import connection
-
-from pydango.tables import Account
-from pydango.tables import Category
+from pydango.tables import (
+    Account,
+    Category,
+    Director,
+)
 
 
 
@@ -21,11 +20,11 @@ def get_action():
     return action.strip().lower()
 
 def insert_category_data(session):
-    """Create the Category table which is separate from the side that enters theater data
-    and the cinephile data"""
+    """Insert data for the Category table which is separate from the side that enters 
+    theater data and the cinephile data"""
     # First check if there's existing data
-    drama = session.query(Category).filter_by(category_name='Drama').first()
-    if drama:
+    existing_drama = session.query(Category).first()
+    if existing_drama:
         return
     else:
         categories_list = [
@@ -40,6 +39,29 @@ def insert_category_data(session):
             category = Category(category_name=cat)
             session.add(category)
             session.commit()
+
+def insert_director_data(session):
+    """Insert data for the Director table"""
+    # First check if there's existing data
+    existing_director = session.query(Director).first()
+    if existing_director:
+        return
+    else:
+        directors_list = [
+            ('Martin', 'Scorsese'),
+            ('Quentin', 'Tarantino'),
+            ('Steven', 'Spielberg'),
+            ('Stanley', 'Kubrick'),
+            ('Christopher', 'Nolan'),
+            ('Ridley', 'Scott')
+        ]
+        for i in directors_list:
+            director = Director(first_name=i[0],
+                last_name=i[1])
+            session.add(director)
+            session.commit()
+
+    
 
 
 

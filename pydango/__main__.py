@@ -8,7 +8,8 @@ from pydango import (
 )
 
 from pydango.primary_func import (
-    insert_category_data
+    insert_category_data,
+    insert_director_data,
 )
 
 from pydango.secondary_func import (
@@ -29,6 +30,8 @@ def main():
     Base.metadata.create_all(engine)
 
     insert_category_data(session=session)
+    insert_director_data(session=session)
+    
     session.close()
 
     print_header()
