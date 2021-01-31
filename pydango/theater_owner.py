@@ -1,3 +1,6 @@
+from sqlalchemy.orm import sessionmaker
+
+from pydango import state
 from pydango.switchlang import switch
 
 from pydango import (
@@ -16,7 +19,7 @@ def run():
         action = primary_func.get_action()
 
         with switch(action) as s:
-            s.case('c', create_account)
+            s.case('c', create_account(session))
             s.case('m', lambda: 'change_mode')
 
             s.default(secondary_func.unknown_command)

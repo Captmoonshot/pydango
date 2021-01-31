@@ -11,6 +11,8 @@ from pydango import (
 
 from pydango.tables import Account
 
+from pydango.__main__ import session
+
 
 def run():
     print('****************** Hello Cinephile ******************')
@@ -23,6 +25,7 @@ def run():
 
         with switch(action) as s:
             s.case('c', create_account)
+            # s.case('l', log_into_account)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
 
@@ -53,9 +56,9 @@ def show_commands():
     print()
 
 def create_account():
-    engine = connection.create_connection()
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    # engine = connection.create_connection()
+    # Session = sessionmaker(bind=engine)
+    # session = Session()
 
     print("****************** REGISTER ******************")
 
@@ -94,7 +97,15 @@ def create_account():
     state.active_account = account
     secondary_func.success_msg(f"\nCreated new account with id {state.active_account.id}")
 
-    session.close()
+ 
+
+# def log_into_account():
+#     print("****************** LOGIN ******************")
+
+#     email = input("Email: ")
+#     password = input("Password: ")
+
+#     account = session.
 
 
 

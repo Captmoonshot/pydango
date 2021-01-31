@@ -1,5 +1,8 @@
 """Primary function used by pydango.main"""
 
+from sqlalchemy.orm import sessionmaker
+from pydango import connection
+
 from pydango import (
     state
 )
@@ -10,7 +13,12 @@ from pydango.tables import (
     Director,
 )
 
-
+def create_session():
+    """Helper to create Session() object in __main__.py"""
+    engine = connection.create_connection()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return engine, session
 
 def get_action():
     text = '> '

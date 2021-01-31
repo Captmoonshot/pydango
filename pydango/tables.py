@@ -130,14 +130,12 @@ class Movie(Base):
     description     = Column(Text, nullable=True)
     director_id     = Column(Integer, ForeignKey(
             'director.id',
-            onupdate='CASCADE',
-            ondelete='RESTRICT'
+            ondelete='CASCADE'
     ))
     director        = relationship("Director", back_populates='movies')
     category_id     = Column(Integer, ForeignKey(
             'category.id',
-            onupdate='CASCADE',
-            ondelete='RESTRICT'
+            ondelete='CASCADE'
     ))
     category        = relationship("Category", back_populates='movies')
     start_date      = Column(Date, nullable=True)

@@ -1,13 +1,10 @@
-
-from sqlalchemy.orm import sessionmaker
-
 from pydango import (
-    connection,
     cinephile,
     theater_owner
 )
 
 from pydango.primary_func import (
+    create_session,
     insert_category_data,
     insert_director_data,
 )
@@ -21,18 +18,14 @@ from pydango.tables import (
     Base
 )
 
-def main():
+engine, session = create_session()
 
-    engine = connection.create_connection()
-    Session = sessionmaker(bind=engine)
-    session = Session()
+def main():
 
     Base.metadata.create_all(engine)
 
     insert_category_data(session=session)
     insert_director_data(session=session)
-    
-    session.close()
 
     print_header()
 
@@ -45,7 +38,7 @@ def main():
     except KeyboardInterrupt:
         return
 
-
+    session.close()
 
 
 
