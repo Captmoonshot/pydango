@@ -18,6 +18,8 @@ from pydango.tables import (
     Movie,
 )
 
+from pydango.cinephile import log_into_account
+
 engine, session = create_session()
 
 def run():
@@ -61,6 +63,10 @@ def show_commands():
     print()
 
 def create_account():
+    """This registration function differs slightly enough from the
+    registration function in cinephile.py that I had to violate the
+    DRY principle"""
+
     print("****************** REGISTER ******************")
 
     print()
@@ -99,25 +105,6 @@ def create_account():
     state.active_account = account
     secondary_func.success_msg(f"\nCreated new account with id {state.active_account.id}")
 
- 
-
-def log_into_account():
-    print("****************** LOGIN ******************")
-
-    email = input("Email: ").strip()
-    password = input("Password: ")
-
-    account = session.query(Account).filter_by(email=email).first()
-
-    if not account:
-        secondary_func.error_msg(f"Could not find account with email ({email})")
-        return
-    elif account.password != password:
-        secondary_func.error_msg(f"Password does not match")
-        return
-    
-    state.active_account = account
-    secondary_func.success_msg(f"\nYou are now logged in.")
 
 
 def create_movie():

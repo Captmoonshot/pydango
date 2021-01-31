@@ -5,6 +5,7 @@ from pydango import (
 
 from pydango.primary_func import (
     create_session,
+    insert_actor_data,
     insert_category_data,
     insert_director_data,
 )
@@ -27,6 +28,7 @@ def main():
     # Autoload some data without user/CLI interface
     insert_category_data(session=session)
     insert_director_data(session=session)
+    insert_actor_data(session=session)
 
     print_header()
 

@@ -10,7 +10,6 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy_utils import PasswordType
 from sqlalchemy import (
-    event,
     BigInteger,
     Boolean,
     Column,
@@ -19,6 +18,7 @@ from sqlalchemy import (
     Integer,
     ForeignKey,
     String,
+    Table,
     Text,
 )
 from sqlalchemy.orm import sessionmaker
@@ -90,12 +90,7 @@ class Actor(Base):
 
     def __repr__(self):
         return f"<{self.__class__.__name__}(first_name={self.first_name}, last_name={self.last_name})>"
-    
-# @event.listens_for(Session, 'before_attach')
-# def receive_before_actor_attach(session, instance):
-#     "listens for the 'before_attach' event"
-#     age = num_years(begin=instance.birth_day, end=None)
-#     instance.age = age
+        
 
 class Category(Base):
     __tablename__ = "category"
@@ -148,7 +143,8 @@ class Movie(Base):
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 Director.movies = relationship("Movie", order_by=Movie.id, back_populates="director")
 
-
+# Many-To-Many Relation
+# movie_actor = Table()
 
 
 class Payment(Base):
