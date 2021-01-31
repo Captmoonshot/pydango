@@ -61,7 +61,7 @@ def insert_director_data(session):
             ('Steven', 'Spielberg'),
             ('Stanley', 'Kubrick'),
             ('Christopher', 'Nolan'),
-            ('Ridley', 'Scott')
+            ('Scott', 'Ridley'),
         ]
         for i in directors_list:
             director = Director(first_name=i[0],

@@ -51,8 +51,6 @@ def get_session_obj():
     Session = sessionmaker(bind=engine)
     return Session
 
-Session = get_session_obj()
-
 
 Base = declarative_base()
 
@@ -93,11 +91,11 @@ class Actor(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(first_name={self.first_name}, last_name={self.last_name})>"
     
-@event.listens_for(Session, 'before_attach')
-def receive_before_actor_attach(session, instance):
-    "listens for the 'before_attach' event"
-    age = num_years(begin=instance.birth_day, end=None)
-    instance.age = age
+# @event.listens_for(Session, 'before_attach')
+# def receive_before_actor_attach(session, instance):
+#     "listens for the 'before_attach' event"
+#     age = num_years(begin=instance.birth_day, end=None)
+#     instance.age = age
 
 class Category(Base):
     __tablename__ = "category"
@@ -146,12 +144,12 @@ class Movie(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
 
-@event.listens_for(Session, 'before_attach')
-def receive_before_movie_attach(session, instance):
-    "listens for the 'before_attach' event"
-    if instance.start_date <= date.today() <= instance.end_date:
-        active = True
-    active = False
+# @event.listens_for(Session, 'before_attach')
+# def receive_before_movie_attach(session, instance):
+    # "listens for the 'before_attach' event"
+    # if instance.start_date <= date.today() <= instance.end_date:
+    #     instance.active = True
+    # instance.active = False
 
 # Set the ForeignKey and relationship before creating "movie" Table
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
