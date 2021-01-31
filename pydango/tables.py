@@ -17,6 +17,7 @@ from sqlalchemy import (
     DateTime,
     Integer,
     ForeignKey,
+    ForeignKeyConstraint,
     String,
     Table,
     Text,
@@ -49,6 +50,13 @@ class Account(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(id={self.id}, email={self.email})>"
 
+movie_actors = Table(
+    'movie_actors',
+    Base.metadata,
+    Column('movie_id', ForeignKey('movie.id'), primary_key=True),
+    Column('actor_id', ForeignKey('actor.id'), primary_key=True)
+)
+
 class Actor(Base):
     __tablename__ = 'actor'
 
@@ -57,6 +65,9 @@ class Actor(Base):
     last_name   = Column(String(50), nullable=True)
     birth_day   = Column(Date, nullable=True)
     age         = Column(Integer, nullable=True)
+    movies      = relationship("Movie",
+        secondary=movie_actors,
+        back_populates="actors")
 
     def __repr__(self):
         return f"<{self.__class__.__name__}(first_name={self.first_name}, last_name={self.last_name})>"
@@ -105,16 +116,16 @@ class Movie(Base):
     start_date      = Column(Date, nullable=True)
     end_date        = Column(Date, nullable=True)
     active          = Column(Boolean, nullable=True)
+    actors          = relationship("Actor",
+            secondary=movie_actors,
+            back_populates="movies")
 
     def __repr__(self):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
 
 # Set the ForeignKey and relationship before creating "movie" Table
-Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 Director.movies = relationship("Movie", order_by=Movie.id, back_populates="director")
-
-# Many-To-Many Relation
-# movie_actor = Table()
+Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 
 
 class Payment(Base):

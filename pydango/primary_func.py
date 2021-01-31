@@ -15,7 +15,9 @@ from pydango.tables import (
     Actor,
     Category,
     Director,
+    Movie
 )
+
 
 def yearsago(years, from_date=None):
     """Helper function for calculating the date n years ago
@@ -121,7 +123,47 @@ def insert_director_data(session):
             session.add(director)
             session.commit()
 
-    
+def insert_movie_data(session):
+    """Insert data for the Movie table"""
+    # First check if there's existing data
+    existing_movie = session.query(Movie).first()
+    if existing_movie:
+        return
+    else:
+        movies_list = [
+            ('The Departed', '2006', 'R', 151, 'Irish Gangsters, Boston, Betrayal, Cops, Revenge',
+            1, 1, '2020-11-1', '2021-01-01', False),
+            ('Pulp Fiction', '1994', 'R', 178, 'Boxing, Robbery, Hitmen, Samuel L. Jackson',
+            2, 1, '2020-12-25', '2021-12-15', True),
+            ('Jurassic Park', '1993', 'PG-13', 127, 'Dinosaurs, DNA, T-Rex, Velociraptor, Chaos',
+            3, 4, '2020-11-15', '2021-07-04', True),
+            ('A Clockwork Orange', '1971', 'R', 136, 'Crazy, Crime, Future, Dystopian',
+            4, 4, '2021-01-01', '2021-05-05', True),
+            ('Aliens', '1986', 'R', 137, 'Aliens, Eat People, Spaceship, Future',
+            6, 3, '2021-01-01', '2021-05-05', True),
+            ('Interstellar', '2014', 'PG-13', 169, 'Apocalypse, Black Hole, Time Travel, Astronauts',
+            5, 4, '2021-1-7', '2021-07-07', True),
+        ]
+        for i in movies_list:
+            movie = Movie(
+                title=i[0],
+                year=i[1],
+                rating=i[2],
+                length_min=i[3],
+                description=i[4],
+                director_id=i[5],
+                category_id=i[6],
+                start_date=i[7],
+                end_date=i[8],
+                active=i[9]
+            )
+            session.add(movie)
+            session.commit()
+
+
+
+
+
 
 
 

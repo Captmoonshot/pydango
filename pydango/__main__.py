@@ -8,6 +8,7 @@ from pydango.primary_func import (
     insert_actor_data,
     insert_category_data,
     insert_director_data,
+    insert_movie_data,
 )
 
 from pydango.secondary_func import (
@@ -29,6 +30,7 @@ def main():
     insert_category_data(session=session)
     insert_director_data(session=session)
     insert_actor_data(session=session)
+    insert_movie_data(session=session)
 
     print_header()
 
