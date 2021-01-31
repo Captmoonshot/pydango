@@ -1,6 +1,7 @@
 """Account class for the account TABLE"""
 
 import datetime
+from datetime import date
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -8,6 +9,7 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy_utils import PasswordType
 from sqlalchemy import (
+    event,
     BigInteger,
     Boolean,
     Column,
@@ -18,6 +20,18 @@ from sqlalchemy import (
     String,
     Text,
 )
+from sqlalchemy.orm import sessionmaker
+
+from pydango import connection
+
+def get_session_obj():
+    """Helper function to generation Session obj"""
+    engine = connection.create_connection()
+    Session = sessionmaker(bind=engine)
+    return Session
+
+Session = get_session_obj()
+
 
 Base = declarative_base()
 
@@ -95,9 +109,37 @@ class Movie(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
 
+@event.listens_for(Session, 'before_attach')
+def receive_before_attach(session, instance):
+    "listens for the 'before_attach' event"
+    if instance.start_date <= date.today() <= instance.end_date:
+        active = True
+    active = False
 
 # Set the ForeignKey and relationship before creating "movie" Table
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 Director.movies = relationship("Movie", order_by=Movie.id, back_populates="director")
 
 
+
+
+# class Actor(Base):
+#     __tablename__ = 'actor'
+
+
+
+
+
+
+
+class Payment(Base):
+    __tablename__ = 'payment'
+
+    id          = Column(Integer, primary_key=True)
+    credit_card = Column(BigInteger, nullable=True)
+    paid        = Column(Boolean, nullable=True)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}(id={self.id}, paid={self.paid})>"
+
+    

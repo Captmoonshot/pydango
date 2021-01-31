@@ -1,3 +1,4 @@
+
 from sqlalchemy.orm import sessionmaker
 
 from pydango import (
@@ -20,6 +21,7 @@ from pydango.tables import (
 )
 
 def main():
+
     engine = connection.create_connection()
     Session = sessionmaker(bind=engine)
     session = Session()

@@ -40,7 +40,8 @@ def insert_category_data(session):
             category = Category(category_name=cat)
             session.add(category)
             session.commit()
-    
+
+
 
 
 
