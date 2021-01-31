@@ -25,7 +25,7 @@ def run():
 
         with switch(action) as s:
             s.case('c', create_account)
-            # s.case('l', log_into_account)
+            s.case('l', log_into_account)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
 
@@ -99,20 +99,23 @@ def create_account():
 
  
 
-# def log_into_account():
-#     print("****************** LOGIN ******************")
+def log_into_account():
+    print("****************** LOGIN ******************")
 
-#     email = input("Email: ")
-#     password = input("Password: ")
+    email = input("Email: ").strip()
+    password = input("Password: ").strip()
 
-#     account = session.
+    account = session.query(Account).filter_by(email=email).first()
 
-
-
-
-
-
-
+    if not account:
+        secondary_func.error_msg(f"Could not find account with email ({email})")
+        return
+    elif account.password != password:
+        secondary_func.error_msg(f"Password does not match")
+        return
+    
+    state.active_account = account
+    secondary_func.success_msg(f"\nYou are now logged in.")
 
 
 
