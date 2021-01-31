@@ -144,16 +144,11 @@ class Movie(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
 
-# @event.listens_for(Session, 'before_attach')
-# def receive_before_movie_attach(session, instance):
-    # "listens for the 'before_attach' event"
-    # if instance.start_date <= date.today() <= instance.end_date:
-    #     instance.active = True
-    # instance.active = False
-
 # Set the ForeignKey and relationship before creating "movie" Table
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 Director.movies = relationship("Movie", order_by=Movie.id, back_populates="director")
+
+
 
 
 class Payment(Base):
