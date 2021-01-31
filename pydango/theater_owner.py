@@ -140,8 +140,8 @@ def create_movie():
     main_last_name = input("Enter main actor's last name: ").strip()
     another_actor = input("Do you wish to enter another actor (Yes or No)? ")
     if another_actor == "Yes" or another_actor == "Y" or another_actor == "yes" or another_actor == "y":
-        supporting_first_name = input("Enter main actor's first name: ").strip()
-        supporting_last_name = input("Enter main actor's last name: ").strip()
+        supporting_first_name = input("Enter supporting actor's first name: ").strip()
+        supporting_last_name = input("Enter supporting actor's last name: ").strip()
     else:
         supporting_first_name = None
         supporting_last_name = None   
@@ -152,6 +152,12 @@ def create_movie():
         if start_date <= today <= end_date:
             return True
         return False
+
+    if supporting_first_name is not None and supporting_last_name is not None:
+        supporting_actor = session.query(Actor).filter_by(
+            first_name=supporting_first_name,
+            last_name=supporting_last_name
+        ).first()
 
     main_actor = session.query(Actor).filter_by(
         first_name=main_first_name,
@@ -183,10 +189,16 @@ def create_movie():
         active=get_active()
     )
     movie.actors.append(main_actor)
+    if supporting_actor is not None:
+        movie.actors.append(supporting_actor)
 
     session.add(movie)
 
     session.commit()
+
+    print("\nSucess!\n")
+
+
 
 
 
