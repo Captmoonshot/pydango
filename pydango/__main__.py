@@ -1,8 +1,15 @@
+from sqlalchemy.orm import sessionmaker
+
 from pydango import (
     connection,
     cinephile,
     theater_owner
 )
+
+from pydango.primary_func import (
+    insert_category_data
+)
+
 from pydango.secondary_func import (
     print_header,
     find_user_intent
@@ -14,8 +21,13 @@ from pydango.tables import (
 
 def main():
     engine = connection.create_connection()
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
     Base.metadata.create_all(engine)
+
+    insert_category_data(session=session)
+    session.close()
 
     print_header()
 
