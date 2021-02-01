@@ -151,6 +151,9 @@ def create_movie():
         secondary_func.error_msg("You must be a theater owner to post a new movie.")
         return
 
+    # prep actor data
+    actors = session.query(Actor).all()
+
     print("Provide the following information\n")
 
     title = input("Title: ").strip()
@@ -168,6 +171,13 @@ def create_movie():
     end_date = input("Enter the end date: (YYYY-MM-DD) ").strip()
     end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
     
+    # List all available actors:
+    if actors:
+        print("\nList of available actors:\n")
+        for actor in actors:
+            print(actor.first_name, actor.last_name, actor.age)
+            print()
+
     # For Many-To-Many relationship between movies and actors
     main_first_name = input("Enter main actor's first name: ").strip()
     main_last_name = input("Enter main actor's last name: ").strip()
@@ -191,6 +201,8 @@ def create_movie():
             first_name=supporting_first_name,
             last_name=supporting_last_name
         ).first()
+    else:
+        supporting_actor = None
 
     main_actor = session.query(Actor).filter_by(
         first_name=main_first_name,
