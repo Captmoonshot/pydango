@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from getpass import getpass
 
 from pydango import state
 from pydango.switchlang import switch
@@ -49,9 +50,6 @@ def run():
 
 
 
-
-
-
 def show_commands():
     print('What action would you like to take: ')
     print('[C]reate an account')
@@ -63,9 +61,7 @@ def show_commands():
     print()
 
 def create_account():
-    """This registration function differs slightly enough from the
-    registration function in cinephile.py that I had to violate the
-    DRY principle"""
+    """Violation of DRY principle"""
 
     print("****************** REGISTER ******************")
 
@@ -75,7 +71,7 @@ def create_account():
     email = input("Email (required): ").strip().lower()
     credit_card = input("Credit-card number (required, i.e. 4444333399993333): ").strip()
     credit_card = int(credit_card)
-    password = input("Password (required): ").strip()
+    password = getpass().strip()
     zip_code = input("Zip-code (required): ").strip()
     zip_code = int(zip_code)
     first_name = input("What is your first name? ").strip()

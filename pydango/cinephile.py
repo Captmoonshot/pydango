@@ -1,3 +1,5 @@
+from getpass import getpass
+
 from pydango import state
 from pydango.switchlang import switch
 
@@ -62,7 +64,7 @@ def create_account():
     email = input("Email (required): ").strip().lower()
     credit_card = input("Credit-card number (required, i.e. 4444333399993333): ").strip()
     credit_card = int(credit_card)
-    password = input("Password (required): ").strip()
+    password = getpass().strip()
     zip_code = input("Zip-code (required): ").strip()
     zip_code = int(zip_code)
     first_name = input("What is your first name? ").strip()
@@ -98,7 +100,7 @@ def log_into_account():
     print("****************** LOGIN ******************")
 
     email = input("Email: ").strip()
-    password = input("Password: ")
+    password = getpass().strip()
 
     account = session.query(Account).filter_by(email=email).first()
 
