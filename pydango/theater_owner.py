@@ -154,8 +154,10 @@ def create_movie():
         secondary_func.error_msg("You must be a theater owner to post a new movie.")
         return
 
-    # prep actor data
+    # Prep Many-To-One relation data
     actors = session.query(Actor).all()
+    categories = session.query(Category).all()
+    directors = session.query(Director).all()
 
     print("Provide the following information\n")
 
@@ -166,8 +168,20 @@ def create_movie():
     length_min = input("Length of movie in minutes: ").strip()
     length_min = int(length_min)
     description = input("""Movie description: """)
+
+    if directors:
+        print("\nList of available directors: \n")
+        for director in directors:
+            print(director.first_name, director.last_name)
+    print()
     director_first_name = input("Director's first name: ").strip()
     director_last_name = input("Director's last name: ").strip()
+
+    if categories:
+        print("\nList of available categories: \n")
+        for category in categories:
+            print(category.category_name)
+    print()
     category_name = input("Movie category: (i.e. Drama)  ").strip()
     start_date = input("Enter the start date: (YYYY-MM-DD) ").strip()
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
@@ -179,7 +193,7 @@ def create_movie():
         print("\nList of available actors:\n")
         for actor in actors:
             print(actor.first_name, actor.last_name, actor.age)
-            print()
+    print()
 
     # For Many-To-Many relationship between movies and actors
     main_first_name = input("Enter main actor's first name: ").strip()
