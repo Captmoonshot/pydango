@@ -267,16 +267,17 @@ def create_movie():
         theater_id = int(theater_id)
         # Grab the theater object
         theater = session.query(Theater).filter_by(id=theater_id).first()
-        if theater is None:
+        if theater:
+            num_of_screens = input(f"Enter number of screens for theater for {title}: ").strip()
+            num_of_screens = int(num_of_screens)
+            movie.theaters.append(TheaterMovie(theater_id=theater.id, num_of_screens=num_of_screens))
+            print("\nYour theater has been added!\n")
+            t_info = input("Would you like to add another theater (Yes or No)? ").strip()
+            while t_info == "No" or t_info == "no" or t_info == "N" or t_info == "n":
+                break
+        elif theater is None:
             print("That theater does not exist.")
-            break
-        num_of_screens = input(f"Enter number of screens for theater for {title}: ").strip()
-        num_of_screens = int(num_of_screens)
-        movie.theaters.append(TheaterMovie(theater_id=theater.id, num_of_screens=num_of_screens))
-        print("\nYour theater has been added!\n")
-        t_info = input("Would you like to add another theater (Yes or No)? ").strip()
-        while t_info == "No" or t_info == "no" or t_info == "N" or t_info == "n":
-            break
+            continue
 
     session.add(movie)
 
