@@ -12,7 +12,7 @@ from pydango import (
 from pydango.primary_func import (
     create_session,
     yearsago,
-    num_years
+    num_years,
 )
 
 from pydango.tables import (
@@ -20,7 +20,8 @@ from pydango.tables import (
     Actor,
     Category,
     Director,
-    Movie
+    Movie,
+    Theater,
 )
 
 from pydango.cinephile import log_into_account
@@ -40,6 +41,7 @@ def run():
             s.case('c', create_account)
             s.case('l', log_into_account)
             s.case('p', create_movie)
+            s.case('h', create_theater)
             s.case('a', create_actor)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
@@ -59,6 +61,7 @@ def show_commands():
     print('What action would you like to take: ')
     print('[C]reate an account')
     print('[L]ogin to your account')
+    print('Create a t[H]eater')
     print('[P]ost a Movie')
     print('Enter [A]ctor Information')
     print('[M]ain menu')
@@ -242,6 +245,61 @@ def create_movie():
     session.commit()
 
     print("\nSucess!\n")
+
+
+def create_theater():
+    print("****************** REGISTER A NEW THEATER ******************")
+    print()
+
+    if not state.active_account:
+        secondary_func.error_msg("You must be logged in to register a theater.")
+        return
+    if not state.active_account.theater_owner == True:
+        secondary_func.error_msg("You must be a theater owner to register a theater.")
+        return
+
+    print("Please provide the following information")
+
+    # For JSON ticket price data
+    price_dict = {}
+
+    name = input("Name of your theater: ").strip()
+    ticket_q = input("Would you like to add ticket price information (Yes or No)? ").strip()
+    while ticket_q == "Yes" or ticket_q == "Y" or ticket_q == "yes" or ticket_q == "y":
+        key = input("Enter a price category (i.e. Adult): ").strip()
+        value = input(f"Enter the price for {key} (i.e. 5.00): ").strip()
+        price_dict[key] = value
+        ticket_q = input("Would you like to add more ticket price information? ")
+        if ticket_q == "No" or ticket_q == "N" or ticket_q == "no" or ticket_q == "n":
+            break
+    address = input("Address: ").strip()
+    city = input("City: ").strip()
+    home_state = input("State: ").strip()
+    zip_code = input("Zip-code: ").strip()
+    zip_code = int(zip_code)
+
+    open_time = input("Opening time (9:00:00): ")
+    open_time = datetime.strptime(open_time, "%H:%M:%S").time()
+    close_time = input("Closing time (21:00:00): ")
+    close_time = datetime.strptime(close_time, "%H:%M:%S").time()
+
+    theater = Theater(
+        name=name,
+        ticket_price=price_dict,
+        address=address,
+        city=city,
+        home_state=home_state,
+        zip_code=zip_code,
+        open_time=open_time,
+        close_time=close_time
+    )
+
+    session.add(theater)
+    session.commit()
+
+    print("\nSuccess!\n")
+     
+
 
 
 

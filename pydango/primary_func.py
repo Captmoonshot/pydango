@@ -15,7 +15,8 @@ from pydango.tables import (
     Actor,
     Category,
     Director,
-    Movie
+    Movie,
+    Theater,
 )
 
 
@@ -159,6 +160,38 @@ def insert_movie_data(session):
             )
             session.add(movie)
             session.commit()
+
+def insert_theater_data(session):
+    """Insert data for theater data"""
+    # First check for existing data
+    existing_theater = session.query(Theater).first()
+    if existing_theater:
+        return
+    else:
+        theaters_list = [
+            ('AMC Rainbow', {'Child': '5.99', 'Adult': '9.99'}, '1234 Rainbow Rd.',
+            'Las Vegas', 'NV', 89123, '9:00:00', '21:00:00'),
+            ('AMC Town Square', {'Child': '6.99', 'Adult': '11.99'}, '1234 Las Vegas Blvd',
+            'Las Vegas', 'NV', 89123, '8:00:00', '23:00:00'),
+            ('Red Rock Movies', {'Child': '3.99', 'Adult': '7.99'}, '1234 Red Rock Dr',
+            'Las Vegas', 'NV', 89128, '12:00:00', '23:00:00')
+        ]
+        for i in theaters_list:
+            theater = Theater(
+                name=i[0],
+                ticket_price=i[1],
+                address=i[2],
+                city=i[3],
+                home_state=i[4],
+                zip_code=i[5],
+                open_time=i[6],
+                close_time=i[7]
+            )
+            session.add(theater)
+            session.commit()
+
+
+
 
 
 

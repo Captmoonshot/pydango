@@ -8,7 +8,11 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import relationship
 
-from sqlalchemy_utils import PasswordType
+from sqlalchemy_utils import (
+    PasswordType,
+    JSONType
+)
+
 from sqlalchemy import (
     BigInteger,
     Boolean,
@@ -21,6 +25,7 @@ from sqlalchemy import (
     String,
     Table,
     Text,
+    Time,
 )
 
 Base = declarative_base()
@@ -129,13 +134,21 @@ Director.movies = relationship("Movie", order_by=Movie.id, back_populates="direc
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
 
 
-# class Theater(Base):
-#     __tablename__ = 'theater'
+class Theater(Base):
+    __tablename__ = 'theater'
 
-#     id              = Column(Integer, primary_key=True)
-#     name            = Column(String(50), nullable=False)
-#     ticket_price    = Column()
+    id              = Column(Integer, primary_key=True)
+    name            = Column(String(50), nullable=False)
+    ticket_price    = Column(JSONType, nullable=True)
+    address         = Column(String(50), nullable=True)
+    city            = Column(String(50), nullable=True)
+    home_state      = Column(String(50), nullable=True)
+    zip_code        = Column(Integer, nullable=True)
+    open_time       = Column(Time, nullable=True)
+    close_time      = Column(Time, nullable=True)
 
+    def __repr__(self):
+        return f"<{self.___class__.__name__}(name={self.name}, address={self.address})>"
 
 class Payment(Base):
     __tablename__ = 'payment'

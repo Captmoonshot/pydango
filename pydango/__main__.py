@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from pydango import (
     cinephile,
     theater_owner
@@ -9,6 +11,7 @@ from pydango.primary_func import (
     insert_category_data,
     insert_director_data,
     insert_movie_data,
+    insert_theater_data,
 )
 
 from pydango.secondary_func import (
@@ -31,6 +34,7 @@ def main():
     insert_director_data(session=session)
     insert_actor_data(session=session)
     insert_movie_data(session=session)
+    insert_theater_data(session=session)
 
     print_header()
 
