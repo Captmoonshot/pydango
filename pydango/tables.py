@@ -50,6 +50,7 @@ class Account(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(id={self.id}, email={self.email})>"
 
+# Many-To-Many Through Table for Movie and Actor
 movie_actors = Table(
     'movie_actors',
     Base.metadata,
@@ -123,9 +124,17 @@ class Movie(Base):
     def __repr__(self):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
 
-# Set the ForeignKey and relationship before creating "movie" Table
+# Reverse relationships for One-to-Many with Movie Table
 Director.movies = relationship("Movie", order_by=Movie.id, back_populates="director")
 Category.movies = relationship("Movie", order_by=Movie.id, back_populates="category")
+
+
+# class Theater(Base):
+#     __tablename__ = 'theater'
+
+#     id              = Column(Integer, primary_key=True)
+#     name            = Column(String(50), nullable=False)
+#     ticket_price    = Column()
 
 
 class Payment(Base):
@@ -139,3 +148,5 @@ class Payment(Base):
         return f"<{self.__class__.__name__}(id={self.id}, paid={self.paid})>"
 
     
+
+

@@ -9,14 +9,18 @@ from pydango import (
     secondary_func
 )
 
-from pydango.primary_func import create_session
+from pydango.primary_func import (
+    create_session,
+    yearsago,
+    num_years
+)
 
 from pydango.tables import (
     Account,
     Actor,
     Category,
     Director,
-    Movie,
+    Movie
 )
 
 from pydango.cinephile import log_into_account
@@ -36,6 +40,7 @@ def run():
             s.case('c', create_account)
             s.case('l', log_into_account)
             s.case('p', create_movie)
+            s.case('a', create_actor)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
 
@@ -55,6 +60,7 @@ def show_commands():
     print('[C]reate an account')
     print('[L]ogin to your account')
     print('[P]ost a Movie')
+    print('Enter [A]ctor Information')
     print('[M]ain menu')
     print('e[X]it app')
     print('[?] Help (this info)')
@@ -102,6 +108,37 @@ def create_account():
     secondary_func.success_msg(f"\nCreated new account with id {state.active_account.id}")
 
 
+def create_actor():
+    print("****************** POST AN ACTOR ******************")
+    print()
+
+    if not state.active_account:
+        secondary_func.error_msg("You must be logged in to post a movie.")
+        return
+    if not state.active_account.theater_owner == True:
+        secondary_func.error_msg("You must be a theater owner to post a new movie.")
+        return
+    
+    print("Provide the following information\n")
+
+    first_name = input("Actor's first name: ").strip()
+    last_name = input("Actor's last name: ").strip()
+    birth_day = input("Actor's birthday (YYYY-MM-DD): ").strip()
+    birth_day = datetime.strptime(birth_day, '%Y-%m-%d').date()
+    # calculate age from birth_day using num_years()
+    age = num_years(birth_day)
+
+    actor = Actor(
+        first_name=first_name,
+        last_name=last_name,
+        birth_day=birth_day,
+        age=age
+    )
+
+    session.add(actor)
+    session.commit()
+
+    print("\nSuccess!\n")
 
 def create_movie():
     print("****************** POST A NEW MOVIE ******************")
