@@ -69,6 +69,8 @@ def insert_actor_data(session):
             ('Cillian', 'Murphy', '1976-05-25'),
             ('Marion', 'Cotillard', '1975-09-30'),
             ('Joseph', 'Levitt', '1981-02-17'),
+            ('Tom', 'Hanks', '1956-07-09'),
+            ('Leonardo', 'DiCaprio', '1974-11-11'),
         ]
 
         for i in actors_list:

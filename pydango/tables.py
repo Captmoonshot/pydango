@@ -125,6 +125,7 @@ class Movie(Base):
     actors          = relationship("Actor",
             secondary=movie_actors,
             back_populates="movies")
+    theaters        = relationship("TheaterMovie", back_populates="movie")
 
     def __repr__(self):
         return f"<{self.__class__.__name__}(title={self.title}, year={self.year})>"
@@ -146,9 +147,26 @@ class Theater(Base):
     zip_code        = Column(Integer, nullable=True)
     open_time       = Column(Time, nullable=True)
     close_time      = Column(Time, nullable=True)
+    movies          = relationship("TheaterMovie", back_populates="theater")
 
     def __repr__(self):
         return f"<{self.___class__.__name__}(name={self.name}, address={self.address})>"
+
+
+
+class TheaterMovie(Base):
+    __tablename__ = 'theatermovie'
+
+    theater_id      = Column(Integer, ForeignKey('theater.id'), primary_key=True)
+    movie_id        = Column(Integer, ForeignKey('movie.id'), primary_key=True)
+    num_of_screens  = Column(Integer, nullable=True)
+    movie           = relationship("Movie", back_populates="theaters")
+    theater         = relationship("Theater", back_populates="movies")
+
+    def __repr__(self):
+        return f"""<{self.__class__.__name__}(theater_id={self.theater_id},
+        movie_id={self.movie_id}, num_of_screens={self.num_of_screens})>"""
+
 
 class Payment(Base):
     __tablename__ = 'payment'

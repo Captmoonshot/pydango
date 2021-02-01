@@ -22,6 +22,7 @@ from pydango.tables import (
     Director,
     Movie,
     Theater,
+    TheaterMovie,
 )
 
 from pydango.cinephile import log_into_account
@@ -254,6 +255,29 @@ def create_movie():
     if supporting_actor is not None:
         movie.actors.append(supporting_actor)
 
+    # Grab the theater objects
+    theaters = session.query(Theater).all()
+
+    t_info = input("\nWould you like to add theater information for the movie (Yes or No)? ").strip()
+    while t_info == "Yes" or t_info == "yes" or t_info == "Y" or t_info == "y":
+        print("\nList of available theaters\n")
+        for theater in theaters:
+            print(f"id: {theater.id}, name: {theater.name}, address: {theater.address}")
+        theater_id = input("Enter theater id: ").strip()
+        theater_id = int(theater_id)
+        # Grab the theater object
+        theater = session.query(Theater).filter_by(id=theater_id).first()
+        if theater is None:
+            print("That theater does not exist.")
+            break
+        num_of_screens = input(f"Enter number of screens for theater for {title}: ").strip()
+        num_of_screens = int(num_of_screens)
+        movie.theaters.append(TheaterMovie(theater_id=theater.id, num_of_screens=num_of_screens))
+        print("\nYour theater has been added!\n")
+        t_info = input("Would you like to add another theater (Yes or No)? ").strip()
+        while t_info == "No" or t_info == "no" or t_info == "N" or t_info == "n":
+            break
+
     session.add(movie)
 
     session.commit()
@@ -283,7 +307,7 @@ def create_theater():
         key = input("Enter a price category (i.e. Adult): ").strip()
         value = input(f"Enter the price for {key} (i.e. 5.00): ").strip()
         price_dict[key] = value
-        ticket_q = input("Would you like to add more ticket price information? ")
+        ticket_q = input("Would you like to add more ticket price information? ").strip()
         if ticket_q == "No" or ticket_q == "N" or ticket_q == "no" or ticket_q == "n":
             break
     address = input("Address: ").strip()
