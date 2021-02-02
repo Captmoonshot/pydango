@@ -22,6 +22,7 @@ from sqlalchemy import (
     Integer,
     ForeignKey,
     ForeignKeyConstraint,
+    PrimaryKeyConstraint,
     String,
     Table,
     Text,
@@ -166,6 +167,22 @@ class TheaterMovie(Base):
     def __repr__(self):
         return f"""<{self.__class__.__name__}(theater_id={self.theater_id},
         movie_id={self.movie_id}, num_of_screens={self.num_of_screens})>"""
+
+
+theater_schedule = Table(
+    'theater_schedule',
+    Base.metadata,
+    Column('theater_id', ForeignKey('theater.id')),
+    Column('movie_id', ForeignKey('movie.id')),
+    Column('time', Time, nullable=False),
+    Column('seats_available', Integer),
+    PrimaryKeyConstraint(
+        'theater_id',
+        'movie_id',
+        'time',
+        name='theater_schedule_pk'
+    )
+)
 
 
 class Payment(Base):

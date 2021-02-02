@@ -338,6 +338,22 @@ def create_theater():
     session.commit()
 
     print("\nSuccess!\n")
+
+def add_movie_to_existing_theater():
+    print("****************** ADD A MOVIE TO AN EXISTING THEATER ******************")
+    print()
+
+    if not state.active_account:
+        secondary_func.error_msg("You must be logged in to add a movie to a theater.")
+        return
+    if not state.active_account.theater_owner == True:
+        secondary_func.error_msg("You must be a theater owner to add a movie.")
+        return
+    
+    print("Please provide the following information.")
+
+    
+
      
 
 
