@@ -258,6 +258,7 @@ def create_movie():
     # Grab the theater objects
     theaters = session.query(Theater).all()
 
+    # For setting M2M relation between Theater and Movie with extra data: Association obj
     t_info = input("\nWould you like to add theater information for the movie (Yes or No)? ").strip()
     while t_info == "Yes" or t_info == "yes" or t_info == "Y" or t_info == "y":
         print("\nList of available theaters\n")
