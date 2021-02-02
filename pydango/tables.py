@@ -22,6 +22,7 @@ from sqlalchemy import (
     Integer,
     ForeignKey,
     ForeignKeyConstraint,
+    Numeric,
     PrimaryKeyConstraint,
     String,
     Table,
@@ -197,6 +198,51 @@ class Payment(Base):
 
     def __repr__(self):
         return f"<{self.__class__.__name__}(id={self.id}, paid={self.paid})>"
+
+
+
+class Ticket(Base):
+    __tablename__ = 'ticket'
+
+    id              = Column(Integer, primary_key=True)
+    theater_id      = Column(Integer, nullable=False)
+    # theater         = relationship("Theater", back_populates="tickets")
+    movie_id        = Column(Integer, nullable=False)
+    # movie           = relationship("Movie", back_populates="tickets")
+    time            = Column(Time, nullable=False)
+    payment_id      = Column(Integer, ForeignKey(
+            'payment.id',
+            ondelete='CASCADE'
+    ))
+    payment         = relationship("Payment", back_populates="tickets")
+    account_id      = Column(Integer, ForeignKey(
+            'account.id',
+            ondelete='CASCADE'
+    ))
+    account         = relationship("Account", back_populates="tickets")
+    quantity        = Column(Integer, nullable=False)
+    total           = Column(Numeric(2), nullable=False)
+    created         = Column(DateTime, default=datetime.datetime.now)
+    updated         = Column(DateTime, onupdate=datetime.datetime.now)
+
+    __table_args__  = (ForeignKeyConstraint(
+            [theater_id, movie_id, time],
+            [theater_schedule.c.theater_id, theater_schedule.c.movie_id, theater_schedule.c.time],
+    ), )
+
+    def __repr__(self):
+        return f"""{self.__class__.__name__}(id={self.id}, theater_id={self.theater_id}, 
+        movie_id={self.movie_id}, time={self.time}, payment_id={self.payment_id}, 
+        account_id={self.account_id}, quantity={self.quantity}, total={self.total}, 
+        created={self.created}, updated={self.updated})>"""
+
+# Reverse relationships for One-to-Many with Ticket table
+theater_schedule.tickets = relationship("Ticket", back_populates="theater_schedule")
+# Theater.tickets = relationship("Ticket", back_populates="theater")
+# Movie.tickets = relationship("Ticket", back_populates="movie")
+Payment.tickets = relationship("Ticket", back_populates="payment")
+Account.tickets = relationship("Ticket", back_populates="account")
+
 
     
 

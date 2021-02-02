@@ -1,5 +1,7 @@
 from getpass import getpass
 
+from datetime import datetime
+
 from pydango import state
 from pydango.switchlang import switch
 
@@ -9,7 +11,14 @@ from pydango import (
 )
 
 from pydango.primary_func import create_session
-from pydango.tables import Account
+from pydango.tables import (
+    Account,
+    Movie,
+    Payment,
+    Ticket,
+    Theater,
+    theater_schedule,
+)
 
 
 engine, session = create_session()
@@ -26,6 +35,7 @@ def run():
         with switch(action) as s:
             s.case('c', create_account)
             s.case('l', log_into_account)
+            s.case('r', purchase_ticket)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
 
@@ -113,6 +123,16 @@ def log_into_account():
     
     state.active_account = account
     secondary_func.success_msg(f"\nYou are now logged in.")
+
+def purchase_ticket():
+    print("****************** PURCHASE TICKETS ******************")
+    print()
+
+    print('\nList of available movies\n')
+
+
+
+
 
 
 
