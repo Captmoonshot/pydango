@@ -151,7 +151,7 @@ class Theater(Base):
     movies          = relationship("TheaterMovie", back_populates="theater")
 
     def __repr__(self):
-        return f"<{self.___class__.__name__}(name={self.name}, address={self.address})>"
+        return f"<{self.__class__.__name__}(name={self.name}, address={self.address})>"
 
 
 
@@ -168,7 +168,9 @@ class TheaterMovie(Base):
         return f"""<{self.__class__.__name__}(theater_id={self.theater_id},
         movie_id={self.movie_id}, num_of_screens={self.num_of_screens})>"""
 
-
+# Many-to-Many for Theater and Movie table
+# with regular FKs and a Composite PK made of
+# theater_id, movie_id, and time fields
 theater_schedule = Table(
     'theater_schedule',
     Base.metadata,

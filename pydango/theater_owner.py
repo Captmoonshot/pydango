@@ -43,6 +43,7 @@ def run():
             s.case('l', log_into_account)
             s.case('p', create_movie)
             s.case('h', create_theater)
+            s.case('e', add_movie_to_existing_theater)
             s.case('a', create_actor)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
@@ -63,6 +64,7 @@ def show_commands():
     print('[C]reate an account')
     print('[L]ogin to your account')
     print('Create a t[H]eater')
+    print('Add movie to [E]xisting theater')
     print('[P]ost a Movie')
     print('Enter [A]ctor Information')
     print('[M]ain menu')
@@ -351,6 +353,44 @@ def add_movie_to_existing_theater():
         return
     
     print("Please provide the following information.")
+    # Grab all theater objects
+    theaters = session.query(Theater).all()
+
+    while True:
+
+        print("\nList of available theaters: \n")
+        for theater in theaters:
+            print(f"Id: {theater.id}, Name: {theater.name}")
+        print()
+        theater_id = input("Enter the theater's Id you want to add movies for: ").strip()
+        theater_id = int(theater_id)
+        # Grab the chosen theater object
+        theater = session.query(Theater).filter_by(id=theater_id).first()
+        print("\nList of available movies: \n")
+        # Grab all movie objects
+        movies = session.query(Movie).all()
+        for movie in movies:
+            print(f"Id: {movie.id}, Title: {movie.title}")
+        movie_id = input(f"Enter the movie's Id you want to add to {theater.name}: ").strip()
+        movie_id = int(movie_id)
+        # Grab the movie with the id provided
+        movie = session.query(Movie).filter_by(id=movie_id).first()
+        num_of_screens = input(f"Enter number of screens for movie {movie.title}: ").strip()
+        num_of_screens = int(num_of_screens)
+        try:
+            theater.movies.append(TheaterMovie(theater_id=theater.id, movie_id=movie.id, num_of_screens=num_of_screens))
+            session.add(theater)
+            session.commit()
+        except Exception as e:
+            print(e)
+        continue_add = input("Would you like to add another movie to an existing theater (Yes or No)? ").strip()
+        if continue_add == "No" or continue_add == "no" or continue_add == "N" or continue_add == "n":
+            break
+        
+        
+    
+    
+
 
     
 
