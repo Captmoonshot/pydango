@@ -10,7 +10,11 @@ from pydango import (
     secondary_func
 )
 
-from pydango.primary_func import create_session
+from pydango.primary_func import (
+    create_session,
+    random_number_generator,
+)
+
 from pydango.tables import (
     Account,
     Movie,
@@ -154,7 +158,7 @@ def purchase_ticket():
         movie = session.query(Movie).filter_by(id=i.movie_id).first()
         index += 1
         print(f"""{index}: {theater.name} {theater.address}, Prices: {theater.ticket_price} 
-        {movie.title}, Schedules: {i.time}, Seats: {i.seats_available}""")
+        {movie.title}, Schedules: {i.time}, Seats: {i.seats_available}\n""")
 
     ticket_number = input("\nEnter ticket number: ").strip()
     ticket_number  = int(ticket_number) - 1
@@ -165,13 +169,13 @@ def purchase_ticket():
     category = input("Which category of tickets (i.e. Adult/Child): ").strip()
     
     theaters_list = []
-    payment_id = 0
     # Creat a tuple of the required information to purchase a ticket
     # along with an index so the user can select a tuple
     for i, x in enumerate(schedules, 1):
         theater = session.query(Theater).filter_by(id=x.theater_id).first()
         movie = session.query(Movie).filter_by(id=x.movie_id).first()
-        payment_id += 1
+        payment_id = random_number_generator()
+        payment_id = int(payment_id)
         tup = (i, theater.id, movie.id, x.time, payment_id, account.id)
         theaters_list.append(tup)
 
@@ -181,11 +185,10 @@ def purchase_ticket():
     # I need to figure out the price for the category chosen for 
     # this particular theater outside of the loop because we don't want to do this for every theater
     my_theater = session.query(Theater).filter_by(id=my_ticket[1]).first()
-    my_movie = sessin.query(Movie).filter_by(id=my_ticket[2]).first()
+    my_movie = session.query(Movie).filter_by(id=my_ticket[2]).first()
 
     ticket_price = float(my_theater.ticket_price[category])
     total = ticket_price * quantity
-
 
     ticket = Ticket(
         theater_id=my_ticket[1],
@@ -196,12 +199,16 @@ def purchase_ticket():
         quantity=quantity,
         total=total
     )
-
+    
     payment = Payment(
         id=my_ticket[4],
         credit_card=account.credit_card,
         paid=True
     )
+
+    session.add(ticket)
+    session.add(payment)
+    session.commit()
 
     # I think there's gotta be a better way to do this, but what it's supposed to do
     # is update the value of seats_available in theater_schedule
@@ -217,17 +224,14 @@ def purchase_ticket():
         theater_schedule.c.time==my_ticket[3])).values(seats_available=new_seats_available))
 
 
-    session.add(ticket)
-    session.add(payment)
-    session.commit()
-
     ticket_receipt = session.query(Ticket).filter_by(id=ticket.id).first()
 
     print("\nYour receipt: \n")
-    print(f"""Movie: {my_movie.title} | Location: {my_theater.address} 
+    print(f"""Movie: {my_movie.title} | Location: {my_theater.name} at {my_theater.address} 
     Time: {ticket_receipt.time} | Quantity: {ticket_receipt.quantity} tickets 
-    Total Price: ${total} \n 
-    Date of Purchase: {ticket_receipt.created}""")
+    Total Price: ${total} \n
+
+    Payment Id: {payment.id} | Date of Purchase: {ticket_receipt.created}""")
 
     print("\nEnjoy your movie!\n")
 

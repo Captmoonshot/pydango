@@ -1,5 +1,9 @@
 """Primary function used by pydango.main"""
 
+import os
+import random
+import string
+
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
@@ -27,6 +31,11 @@ from pydango.init_data import (
     theaters_list,
 )
 
+
+
+def random_number_generator(size=6, chars=string.digits):
+    """Generate random numbers to use for payment ids""" 
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def yearsago(years, from_date=None):
     """Helper function for calculating the date n years ago
