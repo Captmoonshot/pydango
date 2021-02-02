@@ -23,6 +23,7 @@ from pydango.tables import (
     Movie,
     Theater,
     TheaterMovie,
+    theater_schedule,
 )
 
 from pydango.cinephile import log_into_account
@@ -44,6 +45,7 @@ def run():
             s.case('p', create_movie)
             s.case('h', create_theater)
             s.case('e', add_movie_to_existing_theater)
+            s.case('s', add_schedule_to_existing_theater)
             s.case('a', create_actor)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
@@ -65,6 +67,7 @@ def show_commands():
     print('[L]ogin to your account')
     print('Create a t[H]eater')
     print('Add movie to [E]xisting theater')
+    print('Add [S]chedule to existing theater')
     print('[P]ost a Movie')
     print('Enter [A]ctor Information')
     print('[M]ain menu')
@@ -320,9 +323,9 @@ def create_theater():
     zip_code = input("Zip-code: ").strip()
     zip_code = int(zip_code)
 
-    open_time = input("Opening time (9:00:00): ")
+    open_time = input("Opening time (9:00:00): ").strip()
     open_time = datetime.strptime(open_time, "%H:%M:%S").time()
-    close_time = input("Closing time (21:00:00): ")
+    close_time = input("Closing time (21:00:00): ").strip()
     close_time = datetime.strptime(close_time, "%H:%M:%S").time()
 
     theater = Theater(
@@ -357,12 +360,13 @@ def add_movie_to_existing_theater():
     theaters = session.query(Theater).all()
 
     while True:
-
+        # Here we're performing multiple queries inside of a loop
+        # which makes it inefficient
         print("\nList of available theaters: \n")
         for theater in theaters:
             print(f"Id: {theater.id}, Name: {theater.name}")
         print()
-        theater_id = input("Enter the theater's Id you want to add movies for: ").strip()
+        theater_id = input("\nEnter the theater's Id you want to add movies for: ").strip()
         theater_id = int(theater_id)
         # Grab the chosen theater object
         theater = session.query(Theater).filter_by(id=theater_id).first()
@@ -387,7 +391,83 @@ def add_movie_to_existing_theater():
         if continue_add == "No" or continue_add == "no" or continue_add == "N" or continue_add == "n":
             break
         
+def add_schedule_to_existing_theater():
+    print("****************** ADD A SCHEDULE TO AN EXISTING THEATER ******************")
+    print()
+
+    if not state.active_account:
+        print("You must be logged in to add a schedule.")
+        return
+    if not state.active_account.theater_owner == True:
+        print("You must be a theater owner to add a schedule.")
+        return
+
+    # Grab Theater and Movie objects
+    theaters = session.query(Theater).all()
+    movies = session.query(Movie).all()
+
+    # Create a connection obj using Expression Language syntax
+    conn = engine.connect()
+    
+    print("Please provide the following information")
+
+    while True:
+
+        print("\nList of available theaters: \n")
+        for theater in theaters:
+            # If theater.movies collection actually contains data
+            if theater.movies:
+                print(f"Id: {theater.id}, Name: {theater.name}")
+        print()
+        theater_id = input("\nEnter theater's Id: ").strip()
+        theater_id = int(theater_id)
+        theater = session.query(Theater).filter_by(id=theater_id).first()
+
+        print(f"\nList of available movies for {theater.name}: \n")
+        for movie in theater.movies:
+            print(f"Id: {movie.movie.id}, Title: {movie.movie.title}")
+        movie_id = input("\nEnter movie's Id: ").strip()
+        movie_id = int(movie_id)
+        movie = session.query(Movie).filter_by(id=movie_id).first()
+        print()
+
+        time = input("Enter a time for the movie (i.e. 11:00:00): ").strip()
+        time = datetime.strptime(time, "%H:%M:%S").time()
+        seats_available = input("Enter number of seats available for scheduled movie: ").strip()
+        seats_available = int(seats_available)
+
+        this_schedule = session.query(theater_schedule).filter_by(
+            theater_id=theater.id,
+            movie_id=movie.id,
+            time=time
+        ).first()
         
+        if not this_schedule:
+            schedule = theater_schedule.insert().values(
+                theater_id=theater.id,
+                movie_id=movie.id,
+                time=time,
+                seats_available=seats_available
+            )
+            try:
+                result = conn.execute(schedule)
+            except Exception as e:
+                print(e)
+        else:
+            print("This schedule already exists!")
+            break
+        more_schedule = input("Would you like to enter another movie theater schedule? ").strip()
+        if more_schedule == "No" or more_schedule == "N" or more_schedule == "no" or more_schedule == "n":
+            break
+
+
+    
+        
+        
+
+
+
+
     
     
 

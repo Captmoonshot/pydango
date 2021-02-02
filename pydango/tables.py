@@ -171,6 +171,7 @@ class TheaterMovie(Base):
 # Many-to-Many for Theater and Movie table
 # with regular FKs and a Composite PK made of
 # theater_id, movie_id, and time fields
+# Makes use of SQLAlchemy Expression Language
 theater_schedule = Table(
     'theater_schedule',
     Base.metadata,
