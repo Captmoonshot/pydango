@@ -39,7 +39,7 @@ for i, x in enumerate(schedules, 1):
     quantity = 1
     category = 'Adult'
     total = theater.ticket_price[category] * quantity
-    total = int(total)
+    total = float(total)
     tup = (i, theater.id, movie.id, x.time, payment_id, account.id, quantity, total)
     theaters_list.append(tup)
 
@@ -48,7 +48,7 @@ for i, x in enumerate(schedules, 1):
 print(theaters_list)
 
 ticket_number = input("Enter ticket number: ").strip()
-ticket_number = int(my_ticket) - 1
+ticket_number = int(ticket_number) - 1
 
 my_ticket = theaters_list[ticket_number]
 

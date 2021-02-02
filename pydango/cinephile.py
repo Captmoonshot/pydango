@@ -20,6 +20,11 @@ from pydango.tables import (
     theater_schedule,
 )
 
+from sqlalchemy.sql import (
+    update,
+    and_,
+)
+
 
 engine, session = create_session()
 
@@ -128,7 +133,114 @@ def purchase_ticket():
     print("****************** PURCHASE TICKETS ******************")
     print()
 
-    print('\nList of available movies\n')
+    if not state.active_account:
+        print("You must be logged in to add a schedule.")
+        return
+
+    # Get account credentials that were created on registration
+    account = state.active_account
+
+    # Grab the theater_schedule objects
+    schedules = session.query(theater_schedule).all()
+
+    print("\nMOVIE THEATER SCHEDULES\n")
+
+    # List all available movies and theaters and times
+    # with index loop so they can input a number representing an object
+    # that will later get mapped to elements of tuples appended to a list
+    index = 0
+    for i in schedules:
+        theater = session.query(Theater).filter_by(id=i.theater_id).first()
+        movie = session.query(Movie).filter_by(id=i.movie_id).first()
+        index += 1
+        print(f"""{index}: {theater.name} {theater.address}, Prices: {theater.ticket_price} 
+        {movie.title}, Schedules: {i.time}, Seats: {i.seats_available}""")
+
+    ticket_number = input("\nEnter ticket number: ").strip()
+    ticket_number  = int(ticket_number) - 1
+
+    quantity = input("How many tickets would you like to purchase: ").strip()
+    quantity = int(quantity)
+
+    category = input("Which category of tickets (i.e. Adult/Child): ").strip()
+    
+    theaters_list = []
+    payment_id = 0
+    # Creat a tuple of the required information to purchase a ticket
+    # along with an index so the user can select a tuple
+    for i, x in enumerate(schedules, 1):
+        theater = session.query(Theater).filter_by(id=x.theater_id).first()
+        movie = session.query(Movie).filter_by(id=x.movie_id).first()
+        payment_id += 1
+        tup = (i, theater.id, movie.id, x.time, payment_id, account.id)
+        theaters_list.append(tup)
+
+
+    my_ticket = theaters_list[ticket_number]
+
+    # I need to figure out the price for the category chosen for 
+    # this particular theater outside of the loop because we don't want to do this for every theater
+    my_theater = session.query(Theater).filter_by(id=my_ticket[1]).first()
+    my_movie = sessin.query(Movie).filter_by(id=my_ticket[2]).first()
+
+    ticket_price = float(my_theater.ticket_price[category])
+    total = ticket_price * quantity
+
+
+    ticket = Ticket(
+        theater_id=my_ticket[1],
+        movie_id=my_ticket[2],
+        time=my_ticket[3],
+        payment_id=my_ticket[4],
+        account_id=my_ticket[5],
+        quantity=quantity,
+        total=total
+    )
+
+    payment = Payment(
+        id=my_ticket[4],
+        credit_card=account.credit_card,
+        paid=True
+    )
+
+    # I think there's gotta be a better way to do this, but what it's supposed to do
+    # is update the value of seats_available in theater_schedule
+    # everytime someone purchases a ticket
+    my_theater_schedule = session.query(theater_schedule).filter_by(
+            theater_id=my_ticket[1],
+            movie_id=my_ticket[2],
+            time=my_ticket[3]
+    ).first()
+    new_seats_available = my_theater_schedule.seats_available - quantity
+    engine.execute(update(theater_schedule).where(and_(theater_schedule.c.theater_id==my_ticket[1],
+        theater_schedule.c.movie_id==my_ticket[2],
+        theater_schedule.c.time==my_ticket[3])).values(seats_available=new_seats_available))
+
+
+    session.add(ticket)
+    session.add(payment)
+    session.commit()
+
+    ticket_receipt = session.query(Ticket).filter_by(id=ticket.id).first()
+
+    print("\nYour receipt: \n")
+    print(f"""Movie: {my_movie.title} | Location: {my_theater.address} 
+    Time: {ticket_receipt.time} | Quantity: {ticket_receipt.quantity} tickets 
+    Total Price: ${total} \n 
+    Date of Purchase: {ticket_receipt.created}""")
+
+    print("\nEnjoy your movie!\n")
+
+
+
+    
+
+
+
+    
+
+    
+
 
 
 
