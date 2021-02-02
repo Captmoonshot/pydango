@@ -221,7 +221,7 @@ class Ticket(Base):
     ))
     account         = relationship("Account", back_populates="tickets")
     quantity        = Column(Integer, nullable=False)
-    total           = Column(Numeric(2), nullable=False)
+    total           = Column(Numeric(6, 2), nullable=False)
     created         = Column(DateTime, default=datetime.datetime.now)
     updated         = Column(DateTime, onupdate=datetime.datetime.now)
 
