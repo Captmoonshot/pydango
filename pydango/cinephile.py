@@ -47,6 +47,7 @@ def run():
             s.case('l', log_into_account)
             s.case('o', logout)
             s.case('s', list_movies)
+            s.case('n', browse_by_location)
             s.case('r', purchase_ticket)
             s.case('v', view_ticket)
             s.case('m', lambda: 'change_mode')
@@ -74,6 +75,7 @@ def show_commands():
     print('[R]eserve a movie ticket')
     print('[V]iew your movie ticket')
     print('[S]ee list of available movies')
+    print('Search for [N]earby theaters')
     print('[M]ain menu')
     print('e[X]it app')
     print('[?] Help (this info)')
@@ -174,6 +176,38 @@ def list_movies():
         if not more == "":
             break
 
+def browse_by_location():
+    print("****************** BROWSE FOR MOVIES BY LOCATION ******************")
+    print()
+
+    zip_code = input("Enter your zipcode: ").strip()
+    zip_code = int(zip_code)
+
+    theaters = session.query(Theater).filter_by(zip_code=zip_code).all()
+    if not theaters:
+        print("There are no theaters in that zip_code.")
+        by_city = input("Would you like to search by city (Yes or <ENTER to quit>)? ").strip()
+        if by_city == "":
+            return
+        city = input("Enter your city of residence: ").strip()
+        theaters = session.query(Theater).filter_by(city=city).all()
+        if not theaters:
+            print("Sorry, but there are no open theaters in your city.")
+            return
+    for i, theater in enumerate(theaters, 1):
+        movies = theater.movies
+        print(f"""\n{i}. {theater.name} at {theater.address} {theater.zip_code}
+        Open: {theater.open_time.strftime('%H:%M:%S')} | Close: {theater.close_time.strftime('%H:%M:%S')}
+        Prices: {theater.ticket_price}
+        """)
+        print(f"\n{theater.name}'s Movies:\n")
+        if movies:
+            for movie in movies:
+                movie = session.query(Movie).filter_by(id=movie.movie_id).first()
+                print(f"Title: {movie.title} | Rating: {movie.rating}\n")
+        else:
+            print("No movies playing currently due to COVID.")
+            print("Please check back when we get a government that cares about its people.")
 
 def purchase_ticket():
     print("****************** PURCHASE TICKETS ******************")

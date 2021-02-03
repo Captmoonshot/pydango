@@ -75,6 +75,9 @@ def get_action():
     action = input(text)
     return action.strip().lower()
 
+"""The following functions will add initial data into the database so the user can get
+started right away"""
+
 def insert_actor_data(session):
     """Insert data for actor Table"""
     # First check if there's existing data
