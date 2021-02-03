@@ -175,28 +175,6 @@ def list_movies():
             break
 
 
-# def list_movies():
-#     print("****************** BROWSE FOR MOVIES ******************")
-#     print()
-
-#     # Grab all Movie objects
-#     movies = session.query(Movie).filter_by(active=True).all()
-#     # Append titles to a list
-#     movie_titles_list = [i.title for i in movies]
-#     movie_chunks = chunks(movie_titles_list, 5)
-#     while True:
-#         chunked = next(movie_chunks, None)
-#         pprint(chunked)
-#         more = input("\n--More--<ENTER>]\n")
-#         if more == "":
-#             chunked = next(movie_chunks, None)
-#             if chunked == None:
-#                 print("The End")
-#                 break
-#             else:
-#                 pprint(chunked)
-
-
 def purchase_ticket():
     print("****************** PURCHASE TICKETS ******************")
     print()
