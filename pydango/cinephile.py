@@ -9,6 +9,7 @@ from pydango import (
     primary_func,
     secondary_func
 )
+from pydango.primary_func import chunks
 
 from pydango.primary_func import (
     create_session,
@@ -45,6 +46,7 @@ def run():
             s.case('c', create_account)
             s.case('l', log_into_account)
             s.case('o', logout)
+            s.case('s', list_movies)
             s.case('r', purchase_ticket)
             s.case('v', view_ticket)
             s.case('m', lambda: 'change_mode')
@@ -141,8 +143,58 @@ def log_into_account():
 def logout():
     if state.active_account is None:
         print("You are already logged-out.")
+        return
     state.active_account = None
     print("You are logged-out.")
+
+def list_movies():
+    print("****************** BROWSE FOR MOVIES ******************")
+    print()
+
+    # Grab all Movie objects
+    movies = session.query(Movie).filter_by(active=True).all()
+    movies_list = [
+        i.__dict__.copy()
+        for i in movies
+    ]
+    # movie __dict__ attribute contains _sa_instance_state which isn't useful
+    # popped = [i.pop('_sa_instance_state') for i in movies_list]
+    # create a movie_chunks generator out of movie_list
+    # to generate 3 items at a time
+    movie_chunks = chunks(movies_list, 5)
+    while True:
+        chunked = next(movie_chunks, None)
+        if chunked == None:
+            print("The End")
+            break
+        for i in chunked:
+            print(f"""\nTitle: {i['title']} | Rating: {i['rating']}
+            Description: {i['description']}""")
+        more = input("\n--More--<ENTER>]\n")
+        if not more == "":
+            break
+
+
+# def list_movies():
+#     print("****************** BROWSE FOR MOVIES ******************")
+#     print()
+
+#     # Grab all Movie objects
+#     movies = session.query(Movie).filter_by(active=True).all()
+#     # Append titles to a list
+#     movie_titles_list = [i.title for i in movies]
+#     movie_chunks = chunks(movie_titles_list, 5)
+#     while True:
+#         chunked = next(movie_chunks, None)
+#         pprint(chunked)
+#         more = input("\n--More--<ENTER>]\n")
+#         if more == "":
+#             chunked = next(movie_chunks, None)
+#             if chunked == None:
+#                 print("The End")
+#                 break
+#             else:
+#                 pprint(chunked)
 
 
 def purchase_ticket():

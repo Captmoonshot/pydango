@@ -31,7 +31,10 @@ from pydango.init_data import (
     theaters_list,
 )
 
-
+def chunks(lst, chunk_size):
+    """Generator for movies list"""
+    for i in range(0, len(lst), chunk_size):
+        yield lst[i:i + chunk_size]
 
 def random_number_generator(size=6, chars=string.digits):
     """Generate random numbers to use for payment ids""" 
