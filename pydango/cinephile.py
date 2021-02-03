@@ -1,4 +1,5 @@
 from getpass import getpass
+from pprint import pprint
 
 from datetime import datetime
 
@@ -18,6 +19,7 @@ from pydango.primary_func import (
 
 from pydango.tables import (
     Account,
+    Category,
     Movie,
     Payment,
     Ticket,
@@ -48,6 +50,7 @@ def run():
             s.case('o', logout)
             s.case('s', list_movies)
             s.case('n', browse_by_location)
+            s.case('t', browse_by_category)
             s.case('r', purchase_ticket)
             s.case('v', view_ticket)
             s.case('m', lambda: 'change_mode')
@@ -76,6 +79,7 @@ def show_commands():
     print('[V]iew your movie ticket')
     print('[S]ee list of available movies')
     print('Search for [N]earby theaters')
+    print('Search by ca[T]egory')
     print('[M]ain menu')
     print('e[X]it app')
     print('[?] Help (this info)')
@@ -208,6 +212,32 @@ def browse_by_location():
         else:
             print("No movies playing currently due to COVID.")
             print("Please check back when we get a government that cares about its people.")
+
+def browse_by_category():
+    print("****************** BROWSE FOR MOVIES BY CATEGORY ******************")
+    print()
+
+    categories = session.query(Category).all()
+    categories_dict = {
+        '1': 'Drama',
+        '2': 'Action',
+        '3': 'Horror',
+        '4': 'Scifi',
+        '5': 'Romance',
+        '6': 'Comedy'
+    }
+
+    print("Movie categories: \n")
+    for i, category in enumerate(categories, 1):
+        print(f"{i}. {category.category_name}")
+    print()
+    category = input("Which category are you interested in (Enter a number): ").strip()
+    category = session.query(Category).filter_by(category_name=categories_dict[category]).first()
+    movies = category.movies
+    print(f"Movies for category: {category.category_name}\n")
+    for i, movie in enumerate(movies, 1):
+        print(i, movie.title)
+
 
 def purchase_ticket():
     print("****************** PURCHASE TICKETS ******************")
