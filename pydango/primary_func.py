@@ -68,6 +68,13 @@ def create_session():
     session = Session()
     return engine, session
 
+def create_sqlite_session(engine):
+    """Helper to create Session() object in __main__.main()
+    for sqlite database"""
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return engine, session
+
 def get_action():
     text = '> '
     if state.active_account:
