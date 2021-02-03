@@ -176,7 +176,7 @@ def list_movies():
         for i in chunked:
             print(f"""\nTitle: {i['title']} | Rating: {i['rating']}
             Description: {i['description']}""")
-        more = input("\n--More--<ENTER>]\n")
+        more = input("\n--More--<ENTER>\n")
         if not more == "":
             break
 
