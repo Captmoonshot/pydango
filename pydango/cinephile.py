@@ -44,7 +44,9 @@ def run():
         with switch(action) as s:
             s.case('c', create_account)
             s.case('l', log_into_account)
+            s.case('o', logout)
             s.case('r', purchase_ticket)
+            s.case('v', view_ticket)
             s.case('m', lambda: 'change_mode')
             s.case(['x', 'bye', 'exit', 'exit()'], secondary_func.exit_app)
 
@@ -66,6 +68,7 @@ def show_commands():
     print('What action would you like to take: ')
     print('[C]reate an account')
     print('[L]ogin to your account')
+    print('Log[O]ut of your account')
     print('[R]eserve a movie ticket')
     print('[V]iew your movie ticket')
     print('[S]ee list of available movies')
@@ -132,6 +135,15 @@ def log_into_account():
     
     state.active_account = account
     secondary_func.success_msg(f"\nYou are now logged in.")
+    # To help with testing in the Python shell
+    return state.active_account
+
+def logout():
+    if state.active_account is None:
+        print("You are already logged-out.")
+    state.active_account = None
+    print("You are logged-out.")
+
 
 def purchase_ticket():
     print("****************** PURCHASE TICKETS ******************")
@@ -231,34 +243,47 @@ def purchase_ticket():
     Time: {ticket_receipt.time} | Quantity: {ticket_receipt.quantity} tickets 
     Total Price: ${total} \n
 
-    Payment Id: {payment.id} | Date of Purchase: {ticket_receipt.created}""")
+    Payment Id: {payment.id} | Date of Purchase: {ticket_receipt.created.date()}""")
 
     print("\nEnjoy your movie!\n")
 
 def view_ticket():
-    print("****************** VIEW MY TICKET ******************")
+    print("****************** VIEW MY CURRENT TICKETS ******************")
     print()
 
     if not state.active_account:
         print("You must be logged in to view a purchased ticket.")
         return
     
-    
+    # Grab account
+    account = state.active_account
 
+    # Get account-related tickets
+    tickets = session.query(Ticket).filter_by(account_id=account.id).all()
 
+    # If account has no tickets return
+    if not tickets:
+        return
 
-    
+    # Return only valid tickets - tickets that were purchased today
+    today = datetime.today().date()
 
-    
+    print("\nMy Tickets: \n")
 
-
-
-
-
-
-
-
-
+    for ticket in tickets:
+        if ticket.created.date() == today:
+            theater = session.query(Theater).filter_by(id=ticket.theater_id).first()
+            movie = session.query(Movie).filter_by(id=ticket.movie_id).first()
+            payment = session.query(Payment).filter_by(id=ticket.payment_id).first()
+            if not payment.paid:
+                status = 'Unpaid'
+            status = 'Paid'
+            print(f"""
+            Movie: {movie.title} | Location: {theater.name} at {theater.address} 
+            Time: {ticket.time} | Quantity: {ticket.quantity} tickets 
+            Total Price: ${ticket.total} | Status: {status}\n
+            Payment Id: {ticket.payment_id} | Date of Purchase: {ticket.created.date()}\n
+            """)
 
 
 

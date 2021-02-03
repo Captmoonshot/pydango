@@ -26,7 +26,10 @@ from pydango.tables import (
     theater_schedule,
 )
 
-from pydango.cinephile import log_into_account
+from pydango.cinephile import (
+    log_into_account,
+    logout,
+)
 
 engine, session = create_session()
 
@@ -42,6 +45,7 @@ def run():
         with switch(action) as s:
             s.case('c', create_account)
             s.case('l', log_into_account)
+            s.case('o', logout)
             s.case('p', create_movie)
             s.case('h', create_theater)
             s.case('e', add_movie_to_existing_theater)
@@ -65,6 +69,7 @@ def show_commands():
     print('What action would you like to take: ')
     print('[C]reate an account')
     print('[L]ogin to your account')
+    print('Log[O]out of your account')
     print('Create a t[H]eater')
     print('Add movie to [E]xisting theater')
     print('Add [S]chedule to existing theater')
