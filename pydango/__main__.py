@@ -50,6 +50,13 @@ def main():
 
         Base.metadata.create_all(engine)
 
+        # Autoload some data without user/CLI interface
+        insert_category_data(session=session)
+        insert_director_data(session=session)
+        insert_actor_data(session=session)
+        insert_movie_data(session=session)
+        insert_theater_data(session=session)
+
         print_header()
 
         try:

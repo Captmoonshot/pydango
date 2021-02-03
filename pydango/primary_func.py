@@ -96,7 +96,7 @@ def insert_actor_data(session):
             actor = Actor(
                 first_name=i[0],
                 last_name=i[1],
-                birth_day=i[2],
+                birth_day=datetime.strptime(i[2], '%Y-%m-%d').date(),
                 # Not necessary but for precalculating age from birthday
                 age=num_years(datetime.strptime(i[2], '%Y-%m-%d').date()) 
             )
@@ -145,8 +145,8 @@ def insert_movie_data(session):
                 description=i[4],
                 director_id=i[5],
                 category_id=i[6],
-                start_date=i[7],
-                end_date=i[8],
+                start_date=datetime.strptime(i[7], '%Y-%m-%d').date(),
+                end_date=datetime.strptime(i[8], '%Y-%m-%d').date(),
                 active=i[9]
             )
             session.add(movie)
@@ -167,8 +167,8 @@ def insert_theater_data(session):
                 city=i[3],
                 home_state=i[4],
                 zip_code=i[5],
-                open_time=i[6],
-                close_time=i[7]
+                open_time=datetime.strptime(i[6], '%H:%M:%S').time(),
+                close_time=datetime.strptime(i[7], '%H:%M:%S').time()
             )
             session.add(theater)
             session.commit()
