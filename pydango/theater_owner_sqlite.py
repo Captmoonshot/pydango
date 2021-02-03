@@ -73,7 +73,7 @@ def run():
 
 def show_commands():
     print('What action would you like to take: ')
-    print('[C]reate an account')
+    print('[C]reate a theater owner account')
     print('[L]ogin to your account')
     print('Log[O]out of your account')
     print('Create a t[H]eater')
@@ -89,7 +89,7 @@ def show_commands():
 def create_account():
     """Violation of DRY principle"""
 
-    print("****************** REGISTER ******************")
+    print("****************** REGISTER THEATER OWNER ******************")
 
     print()
     print("Please provide the following information\n")
