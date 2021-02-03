@@ -206,9 +206,7 @@ class Ticket(Base):
 
     id              = Column(Integer, primary_key=True)
     theater_id      = Column(Integer, nullable=False)
-    # theater         = relationship("Theater", back_populates="tickets")
     movie_id        = Column(Integer, nullable=False)
-    # movie           = relationship("Movie", back_populates="tickets")
     time            = Column(Time, nullable=False)
     payment_id      = Column(Integer, ForeignKey(
             'payment.id',
@@ -238,8 +236,6 @@ class Ticket(Base):
 
 # Reverse relationships for One-to-Many with Ticket table
 theater_schedule.tickets = relationship("Ticket", back_populates="theater_schedule")
-# Theater.tickets = relationship("Ticket", back_populates="theater")
-# Movie.tickets = relationship("Ticket", back_populates="movie")
 Payment.tickets = relationship("Ticket", back_populates="payment")
 Account.tickets = relationship("Ticket", back_populates="account")
 

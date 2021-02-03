@@ -235,8 +235,14 @@ def purchase_ticket():
 
     print("\nEnjoy your movie!\n")
 
+def view_ticket():
+    print("****************** VIEW MY TICKET ******************")
+    print()
 
-
+    if not state.active_account:
+        print("You must be logged in to view a purchased ticket.")
+        return
+    
     
 
 
