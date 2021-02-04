@@ -248,7 +248,7 @@ def purchase_ticket():
     print()
 
     if not state.active_account:
-        print("You must be logged in to add a schedule.")
+        print("You must be logged in to purchase a ticket.")
         return
 
     # Get account credentials that were created on registration

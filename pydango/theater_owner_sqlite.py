@@ -133,10 +133,10 @@ def create_actor():
     print()
 
     if not state.active_account:
-        secondary_func.error_msg("You must be logged in to post a movie.")
+        secondary_func.error_msg("You must be logged in to post an actor.")
         return
     if not state.active_account.theater_owner == True:
-        secondary_func.error_msg("You must be a theater owner to post a new movie.")
+        secondary_func.error_msg("You must be a theater owner to post a new actor.")
         return
     
     print("Provide the following information\n")
