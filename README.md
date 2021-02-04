@@ -1,111 +1,108 @@
-# SQL-BUDDY
+# PYDANGO
 
-Sql-buddy is a study aid for SQL fundamentals that you can run on the terminal.  You can think of it as the command-line version of index cards you would normally use for studying a subject.
+pydango is a database schema that aims to mimic a movie ticket reservation database system (i.e. Fandango). It's important to note that the database represented by the package is only what I think such a system should look like, not what it actually is.
 
-## Installation
+This was done in the spirit of experimentation and learning as a beginner Python programmer.
 
-You can install sql-buddy with pip: [PYPI](https://pypi.org/project/sql-buddy/)
+The inspiration came from a YouTube video by Mike Kennedy where he build an Air Bnb-like CLI for MongoDB with MongoEngine. I've taken a lot of his code and refactored it for SQLAlchemy and relational databases.  You can find the video here: https://youtu.be/E-1xI85Zog8
 
-    pip install sql-buddy
+You can also find the pip-installable version of Pydango called simply "Pydango" here: https://github.com/Captmoonshot/pydango-pip that can be installed from [PyPI](https://pypi.org/project/pydango-pip/1.0.0/) with:
 
-sql-buddy is supported by Python 3.7 and above.
+```pip install pydango-pip```
+
+This regular version of Pydango is good to clone.  Once you clone it, and set up a configuration file, you can use it for both an SQLite and/or PostgreSQL database backend.
+
+However, pydango-pip will only work with SQLite database backends.
+
+If you're curious about the pydango database schema, you can find all the CREATE TABLE statements, along with their TRIGGER functions and the actual data used here: https://github.com/Captmoonshot/py-dango
 
 ## How to use
 
-sql-buddy is a command line application.  There are two components:
+pydango-pip is a command line application. 
 
-1.  The first component emulates a simple collection of object that represent SQL concepts like GROUP BY:
+To run:
 
-```$ python -m sql_buddy```
+```$ python -m pydango -d sqlite```
 
-Welcome to sql-buddy.  Populating In-memory Database...
+****************** PYDANGO ******************
 
+Welcome to Pydango for movies!
+What would you like to do?
 
-Press Esc + ENTER to enter sql_buddy commands.
-Press CTRL-D to quit
+[t] List a new movie
+[c] Find a movie
 
-Type 'commands' and press Esc + ENTER to get a list of sql_buddy commands
->
+`# Choose [C]`
 
-As the instructions state you can type 'commands' and hit Esc + ENTER (RETURN):
+****************** Hello Cinephile ******************
 
-> commands
-    * list all: lists all the SQL concepts and queries
-    * list some: list the first 10 concepts in the SQL concepts database
-    * search=>{concept_name} gives you the definition, syntax, and usage of a specific SQL concept like group_by
-        * i.e. search=>group_by
-        * i.e. search=>order_by
-        * i.e. search=>where
-        * all SQL concept names must be in lowercase and have underscores in place of spaces
+What action would you like to take:
+[C]reate an account
+[L]ogin to your account
+Log[O]ut of your account
+[R]eserve a movie ticket
+[V]iew your movie ticket
+[S]ee list of available movies
+Search for [N]earby theaters
+Search by ca[T]egory
+[M]ain menu
+e[X]it app
+[?] Help (this info)
 
+`# Choose [S]`
 
-`> list all`
-
-
-group_by: 
-
-Divide the rows returned from the select statement into groups.  For each group, you 
-        can apply an aggregate function like sum(), min(), max(), avg().
-
-
-group_by_with_having: 
-
-We use having in place of the where clause because aggregations like sum() do not work 
-        with the where clause.
+****************** BROWSE FOR MOVIES ******************
 
 
-To search the definition, syntax, usage, and related concepts of a specific SQL concept:
+Title: Pulp Fiction | Rating: R
+            Description: Boxing, Robbery, Hitmen, Samuel L. Jackson
 
-`> search=>group_by`
+Title: Jurassic Park | Rating: PG-13
+            Description: Dinosaurs, DNA, T-Rex, Velociraptor, Chaos
 
-group_by: 
+Title: A Clockwork Orange | Rating: R
+            Description: Crazy, Crime, Future, Dystopian
 
-Divide the rows returned from the select statement into groups.  For each group, you 
-        can apply an aggregate function like sum(), min(), max(), avg().
+Title: Aliens | Rating: R
+            Description: Aliens, Eat People, Spaceship, Future
 
-syntax: 
-select col_1, col_2 from table_name group by col_1, col2
+Title: Interstellar | Rating: PG-13
+            Description: Apocalypse, Black Hole, Time Travel, Astronauts
 
-usage: 
-select staff_id, count(staff_id) from payment group by staff_id
+--More--<ENTER>
 
-related concepts: 
-['group_by_with_having', 'where', 'having', 'order by', 'aggregation', 'sum', 'min', 'max', 'avg']
+Personally, building the project allowed me to appreciate what database engineers do for a living, and also to grokk database designs and just how complicated relational databases can get in the wild.
 
+Special shoutout to the [Las Vegas OpenSource Programming Group](https://github.com/OpenSource-Programming/sqlforbeginners) fro challenging me to take on this project.
 
-The syntax for any individual SQL concept is:
+# To run Pydango with a PostgreSQL backend
 
-`> search=>{concept_name}`
+The very first requirement is you must have PostgreSQL server installed on your machine.  Once you have that along with the proper credentials for it, go ahead and create a `config.ini` file inside of pydango the app directory: pydango/pydango/config.ini
 
-Like Python variables concept names cannot have spaces and must be lowercase.
+You `config.ini` file should looke like this with your own credential information:
 
-2. The second component is an SQL REPL straight from the `prompt-toolkit` documentation example tutorial:
+[postgresql]
+host = localhost
+database = pydango
+user = postgres
+password = <your_password>
+port = 5432
 
-[prompt-toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/pages/tutorials/repl.html)
+Go into your PostgreSQL shell and create the pydango database:
 
-Run sql_buddy like before but with the -o flag:
+```> CREATE DATBASE pydango;```
 
-`$ python -m sql_buddy -o`
+and then after that on the command line:
 
-And simply type SQLite queries:
+```$ python -m pydango```
 
-```
-select last_name, first_name, execution_date from deathrow limit 3;
+It's important to note that if you just want to run in SQLite mode which doesn't require a database server of any type, you must provide the -d flag with sqlite:
 
-('Brooks, Jr.', 'Charlie', '1982-12-07')
+```$ python -m pydango -d sqlite```
 
-('Autry', 'James', '1984-03-14')
-
-("O'Bryan", 'Ronald', '1984-03-31')
-```
-
-Sql-buddy comes with a csv data called tx_deathrow_full.csv that contains information about Texas deathrow inmates: [selectstarsql.com](https://selectstarsql.com/frontmatter.html).
-
-
-The ideal setting for `sql-buddy` is two have two terminals open at the same time. One to utilize the first component to look up SQL concepts, and the other to run queries against an actual SQLite database table.
-
-All data makes use of in-memory-only databases created through `sqlite3` and `sqlalchemy` methods.
+A good use-case is to have two Terminals running side-by-side: one terminal for the Pydango CLI, and the other hooked up to either an SQLite shell or PostgreSQL shell and try to match what's happening on the CLI with equivalent queries in the database shell.  Doing this would help a beginner programmer curious about SQL to learn things like INNER JOINs and TRIGGERs and most importantly - good database design.
 
 For help:
 
-`$ python -m sql_buddy -h`
+`$ python -m pydango -h`
+
