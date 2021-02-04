@@ -13,6 +13,7 @@ passlib = "*"
 python-dateutil = "*"
 ipython = "*"
 pytest = "*"
+tox = "*"
 
 [dev-packages]
 
