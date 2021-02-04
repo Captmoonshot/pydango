@@ -12,6 +12,7 @@ python-dotenv = "*"
 passlib = "*"
 python-dateutil = "*"
 ipython = "*"
+pytest = "*"
 
 [dev-packages]
 

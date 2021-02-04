@@ -14,6 +14,7 @@ from pydango import (
 from pydango.primary_func import (
     create_session,
     create_sqlite_session,
+    insert_account_data,
     insert_actor_data,
     insert_category_data,
     insert_director_data,
@@ -54,6 +55,7 @@ def main():
         insert_category_data(session=session)
         insert_director_data(session=session)
         insert_actor_data(session=session)
+        insert_account_data(session=session)
         insert_movie_data(session=session)
         insert_theater_data(session=session)
 
@@ -80,6 +82,7 @@ def main():
         insert_category_data(session=session)
         insert_director_data(session=session)
         insert_actor_data(session=session)
+        insert_account_data(session=session)
         insert_movie_data(session=session)
         insert_theater_data(session=session)
 

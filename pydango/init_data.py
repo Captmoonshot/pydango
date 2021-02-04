@@ -1,5 +1,11 @@
 """Data to autoload when pydango starts up at __main__.py"""
 
+accounts_list = [
+            ('alex@gmail.com', 1111111111111111, 'password', 89123, 'Alexander', 'Lee'),
+            ('maddy@gmail.com', 2222222222222222, 'password', 89123, 'Madeline', 'Lee'),
+            ('david@gmail.com', 3333333333333333, 'password', 89123, 'David', 'Lee'),
+        ]
+
 actors_list = [
             ('Tom', 'Hardy', '1977-09-15'),
             ('Christian', 'Bale', '1974-01-30'),

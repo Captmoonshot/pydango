@@ -24,6 +24,7 @@ from pydango.tables import (
 )
 
 from pydango.init_data import (
+    accounts_list,
     actors_list,
     categories_list,
     directors_list,
@@ -84,6 +85,25 @@ def get_action():
 
 """The following functions will add initial data into the database so the user can get
 started right away"""
+
+def insert_account_data(session):
+    """Insert data for account Table"""
+    # First check if there's existing data
+    existing_account = session.query(Account).first()
+    if existing_account:
+        return
+    else:
+        for i in accounts_list:
+            account = Account(
+                email=i[0],
+                credit_card=i[1],
+                password=i[2],
+                zip_code=i[3],
+                first_name=i[4],
+                last_name=i[5]
+            )
+            session.add(account)
+            session.commit()
 
 def insert_actor_data(session):
     """Insert data for actor Table"""
